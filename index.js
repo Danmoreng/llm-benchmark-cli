@@ -46,29 +46,6 @@ function nanosecToSec(nanosec) {
     return nanosec / 1e9;
 }
 
-function inferenceStats(modelResponse) {
-    const promptTs = modelResponse.prompt_eval_count / nanosecToSec(modelResponse.prompt_eval_duration);
-    const responseTs = modelResponse.eval_count / nanosecToSec(modelResponse.eval_duration);
-    const totalTs = (modelResponse.prompt_eval_count + modelResponse.eval_count) / nanosecToSec(modelResponse.prompt_eval_duration + modelResponse.eval_duration);
-
-    console.log(`
-----------------------------------------------------
-        ${modelResponse.model}
-        \tPrompt eval: ${promptTs.toFixed(2)} t/s
-        \tResponse: ${responseTs.toFixed(2)} t/s
-        \tTotal: ${totalTs.toFixed(2)} t/s
-
-        Stats:
-        \tPrompt tokens: ${modelResponse.prompt_eval_count}
-        \tResponse tokens: ${modelResponse.eval_count}
-        \tModel load time: ${nanosecToSec(modelResponse.load_duration).toFixed(2)}s
-        \tPrompt eval time: ${nanosecToSec(modelResponse.prompt_eval_duration).toFixed(2)}s
-        \tResponse time: ${nanosecToSec(modelResponse.eval_duration).toFixed(2)}s
-        \tTotal time: ${nanosecToSec(modelResponse.total_duration).toFixed(2)}s
-----------------------------------------------------
-  `);
-}
-
 async function getBenchmarkModels(skipModels = []) {
     try {
         const response = await fetch('http://localhost:11434/api/tags');
